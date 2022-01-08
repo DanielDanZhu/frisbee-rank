@@ -6,12 +6,15 @@ from algorithm import get_rating_differential, get_score_weight
 url = "https://play.usaultimate.org/events/USA-Ultimate-College-Championships-2021/schedule/Men/CollegeMen/d_i_men/"
 #url = "https://play.usaultimate.org/events/USA-Ultimate-College-Championships-2021/schedule/Women/CollegeWomen/d_i_women/"
 #url = "https://play.usaultimate.org/events/2017-US-Open-Club-Championships/schedule/Boys/youth-club-u-20-boys/"
+#url = "https://play.usaultimate.org/events/2018-US-Open-Club-Championships/schedule/Boys/youth-club-u-20-boys/"
+#url = "https://play.usaultimate.org/events/2019-US-Open-Club-Championship/schedule/Boys/youth-club-u-20-boys/"
+#url = "https://play.usaultimate.org/events/Atlantic-Coast-D-I-College-Mens-Regionals-2021/schedule/Men/CollegeMen/"
 
 #scrapes usau website
 tournament = get_tournament(url)
-name = tournament['name']
-teams = tournament['teams']
-games = tournament['games']
+name = tournament.name
+teams = tournament.teams
+games = tournament.games
 
 #pulls from games.txt
 more_games = get_games('mens_games.txt', teams)
@@ -42,8 +45,6 @@ for i in range(0, n):
 
     for team in teams:
         if len(team.game_ratings) > 0:
-            # if (team.name == "North Carolina"):
-            #     print(team.game_ratings)
             team.rating = sum(team.game_ratings)/len(team.game_ratings)
             team.game_ratings = []
 
