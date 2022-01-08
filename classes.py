@@ -1,6 +1,7 @@
 class Team:
-    def __init__(self, name, seed, pool=None):
+    def __init__(self, name, id, seed, pool=None):
         self.name = name
+        self.id = id
         self.seed = seed
         self.pool = pool
         self.games = []
@@ -23,6 +24,9 @@ class Team:
         print(self.to_string())
         for game in self.games:
             print(game.to_string())
+
+    def isSameTeam(self,other):
+        return self.id == other.id
 
 class Game:
     def __init__(self, teamA, teamB, teamA_score, teamB_score, datetime, pool=None):

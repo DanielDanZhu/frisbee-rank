@@ -24,6 +24,7 @@ def get_tournament(url, teams=None):
         pool_letter = pool.find("h3").contents[0][5]
         for row in pool.find("table").find("tbody").find_all("a"):
             name = row.contents[0].rsplit(' ', 1)[0]
+            id = row.get("href").split("=")[1]
             seed = row.contents[0].split(" ")[-1][1:-1]
             doesTeamExist = False
             for team in teams:
@@ -31,7 +32,7 @@ def get_tournament(url, teams=None):
                     doesTeamExist = True
                     break
             if (not doesTeamExist):
-                teams.append(Team(name, seed, pool_letter))
+                teams.append(Team(name, id, seed, pool_letter))
 
     t_year = int(soup.find("span", {"class": "date"}).contents[0].split(" ")[0].split("/")[2])
     t_month = 0
@@ -44,6 +45,8 @@ def get_tournament(url, teams=None):
             if row.has_attr("data-game"):
                 teamA_name = row.find_all("td")[3].find("a").contents[0].rsplit(' ', 1)[0]
                 teamB_name = row.find_all("td")[4].find("a").contents[0].rsplit(' ', 1)[0]
+                teamA_id = row.find_all("td")[3].find("a").get("href").split("=")[1]
+                teamB_id = row.find_all("td")[4].find("a").get("href").split("=")[1]
                 teamA, teamB = None, None
                 teamA_boolean = False
                 teamB_boolean = False
@@ -55,10 +58,10 @@ def get_tournament(url, teams=None):
                         teamB = team
                         teamB_boolean = True
                 if not teamA_boolean:
-                    teamA = Team(teamA_name, row.find_all("td")[3].find("a").contents[0].split(' ')[-1][1:-1],None)
+                    teamA = Team(teamA_name, teamA_id, row.find_all("td")[3].find("a").contents[0].split(' ')[-1][1:-1],None)
                     teams.append(teamA)
                 if not teamB_boolean:
-                    teamB = Team(teamB_name, row.find_all("td")[4].find("a").contents[0].split(' ')[-1][1:-1],None)
+                    teamB = Team(teamB_name, teamB_id, row.find_all("td")[4].find("a").contents[0].split(' ')[-1][1:-1],None)
                     teams.append(teamB)
                 teamA_score = row.find_all("td")[5].find_all("span", {"class": "isScore"})[0].find("span").contents[0]
                 teamB_score = row.find_all("td")[5].find_all("span", {"class": "isScore"})[1].find("span").contents[0]
@@ -87,6 +90,8 @@ def get_tournament(url, teams=None):
             game_teams = game.find_all("span", {"class": "team"})
             teamA_name = game_teams[0].contents[0].contents[0].rsplit(' ', 1)[0]
             teamB_name = game_teams[1].contents[0].contents[0].rsplit(' ', 1)[0]
+            teamA_id = game_teams[0].contents[0].get("href").split("=")[1]
+            teamB_id = game_teams[1].contents[0].get("href").split("=")[1]
             teamA_boolean = False
             teamB_boolean = False
             for team in teams:
@@ -97,10 +102,10 @@ def get_tournament(url, teams=None):
                     teamB = team
                     teamB_boolean = True
             if teamA_boolean == False:
-                teamA = Team(teamA_name, game_teams[0].contents[0].contents[0].rsplit(' ')[-1][1:-1],None)
+                teamA = Team(teamA_name, teamA_id, game_teams[0].contents[0].contents[0].rsplit(' ')[-1][1:-1],None)
                 teams.append(teamA)
             if teamB_boolean == False:
-                teamB = Team(teamB_name, game_teams[1].contents[0].contents[0].rsplit(' ')[-1][1:-1],None)
+                teamB = Team(teamB_name, teamB_id, game_teams[1].contents[0].contents[0].rsplit(' ')[-1][1:-1],None)
                 teams.append(teamB)
             team_scores = game.find_all("span", {"class": "score"})
             teamA_score = team_scores[0].contents[0]
